@@ -1,0 +1,3 @@
+--copy folder from cloud storge to local
+
+gsutil -m cp -r gs://my-first-bucket-alam/flask_k8s C:\Users\malam

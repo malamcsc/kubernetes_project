@@ -1,0 +1,4 @@
+https://cloud.google.com/sql/docs/postgres/connect-kubernetes-engine
+
+gsutil -m cp -r gs://my-first-bucket-alam/flask_k8s.
+  .

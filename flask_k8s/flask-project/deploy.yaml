@@ -1,0 +1,56 @@
+---
+apiVersion: "v1"
+kind: "ConfigMap"
+metadata:
+  name: "api-config"
+  namespace: "default"
+data:
+  DB_USER: "flask_user"
+  DB_PASS: "flask"
+  INSTANCE_HOST : "172.18.0.1"
+  DB_NAME : "flaskdb"
+  DB_PORT : "5433"
+
+---
+apiVersion: "apps/v1"
+kind: "Deployment"
+metadata:
+  name: "flask"
+  namespace: "default"
+  labels:
+    app: "flask"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: "flask"
+  template:
+    metadata:
+      labels:
+        app: "flask"
+    spec:
+      containers:
+      - name: "flask"
+        image: "malamcsc/flask-app-v2:blue"
+        envFrom:
+          - configMapRef:
+              name : api-config
+
+        
+---
+apiVersion: "v1"
+kind: "Service"
+metadata:
+  name: "flask-service"
+  namespace: "default"
+  labels:
+    app: "flask"
+spec:
+  type: "NodePort"
+  ports:
+  - protocol: "TCP"
+    port: 80
+    targetPort: 5000
+    nodePort: 30008
+  selector:
+    app: "flask"  
