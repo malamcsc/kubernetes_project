@@ -1,0 +1,58 @@
+swagger: "2.0"
+info:
+  title: cip_app
+  description: This is microservices written for cip project
+  version: 1.0.0
+
+consumes:
+  - application/json
+produces:
+  - application/json
+
+basePath: /
+
+paths:
+  /bv/api/v1.0/clinicaltrial/filters:
+   get:
+    tags:
+        - Filters
+    summary: Read the entire set of people, sorted by last name
+    description: Returns all clinical trial
+    responses:
+      '200':
+        description: a list of filter.
+        schema:
+          type: array
+          items:
+            properties:
+              filters:
+                type: array
+                items:
+                  properties:
+                    phases:
+                      type: string
+                      description: phase phase phase
+                    countries:
+                      type: string
+                      description: phase phase phase
+                    status:
+                      type: string
+                      description: phase phase phase
+                    trial_year:
+                      type: array
+                      items:
+                        properties:
+                          min_year:
+                            type: integer
+                            description: minimum year
+
+                          max_year:
+                            type: integer
+                            description: maximum year
+                      
+
+
+            
+
+
+

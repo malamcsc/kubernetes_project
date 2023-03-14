@@ -1,0 +1,65 @@
+swagger: "2.0"
+info:
+  title: cip_app
+  description: This is microservices written for cip project
+  version: 1.0.0
+
+consumes:
+  - application/json
+produces:
+  - application/json
+
+basePath: /
+
+paths:
+  /v1.0/alert:
+   get:
+    tags:
+        - Pipeline
+    summary: "Get all pipelines records based on status provided."
+    description: "Returns all clinical trial records based on phase."
+    #operationId: "getFilterPipeline"
+    produces:
+      - "application/json"
+    # parameters:
+    #   - name: "pipelines name"
+    #     in: "path"
+    #     description: "provide status against which record is to be fetched."
+    #     required: true
+    #     type: "string"
+    responses:
+      '200':
+        description: "successful operation"
+        schema:
+          type: "array"
+          items:
+            type: "object"
+            properties:
+              approveddt:
+                type: "string"
+              country:
+                type: "string"
+              drug:
+                type: "string"
+              expectedfilingdt:
+                type: "string"
+              filingdt:
+                type: "string"
+              id_pipeline:
+                type: "integer"
+                format: "int64"
+              indication:
+                type: "string"
+              molecule:
+                type: "string"
+              name_pipeline:
+                type: "string"
+              phase:
+                type: "string"
+              sponsor:
+                type: "string"
+              status:
+                type: "string"
+              summary:
+                type: "string"
+
