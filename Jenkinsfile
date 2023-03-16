@@ -9,7 +9,8 @@ pipeline {
                 CREDENTIALS_ID = 'kubernetes'		
 	}
 	
-    stages {
+    stages 
+	{
 	    
 	    stage('Build Docker Image') {
 		    steps {
@@ -47,4 +48,5 @@ pipeline {
 		    }
 	    }
     }
+}
 }
