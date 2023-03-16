@@ -31,7 +31,7 @@ spec:
     spec:
       containers:
       - name: "flask"
-        image: "malamcsc/flask-app-v2:blue"
+        image: "malamcsc/flask-app-v2:tagversion"
         envFrom:
           - configMapRef:
               name : api-config
