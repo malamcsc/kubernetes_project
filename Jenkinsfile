@@ -1,6 +1,9 @@
 pipeline {
 
   agent any
+  environment {
+        DOCKER_REGISTRY = credentials('dockerhub')
+    }
 
   stages {
 
@@ -22,8 +25,8 @@ pipeline {
 		    steps {
 			    script {
 				    echo "Push Docker Image"
-				    withCredentials([string(credentialsId: 'dockerhub', variable: 'dockerhub')]) {
-            				sh "docker login -u malamcsc -p ${dockerhub}"
+				    withCredentials([usernamePassword(credentialsId: 'dockerhub', passwordVariable: 'DOCKER_REGISTRY_PWD', usernameVariable: 'DOCKER_REGISTRY_USER')]) {
+            				sh "docker login -u ${DOCKER_REGISTRY_USER}  -p ${DOCKER_HUB_CRED_PSW}"
 				    }
 				        myapp.push("${env.BUILD_ID}")
 				    
