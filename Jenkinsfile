@@ -38,7 +38,7 @@ pipeline {
           steps {
 				      script{
                   echo "Push Docker Image"
-                  sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+                  bat 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
 			            myapp.push("${env.BUILD_ID}")
                   echo "Push Docker Image Completed"
 		          }
@@ -56,7 +56,7 @@ pipeline {
     stage('Deploy App') {
       steps {
         echo "Deployment started ..."
-        sh "sed -i 's/tagversion/${env.BUILD_ID}/g' deploy.yaml"
+        bat "sed -i 's/tagversion/${env.BUILD_ID}/g' deploy.yaml"
         echo "Start deployment of deploy.yaml"
         script {
           kubernetesDeploy(configs: "deploy.yml", kubeconfigId: "mykubeconfig")
