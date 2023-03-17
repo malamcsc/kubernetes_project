@@ -38,6 +38,10 @@ pipeline {
           steps {
 				      script{
                   echo "Push Docker Image"
+                  
+                  echo $DOCKERHUB_CREDENTIALS_USR
+                  echo $DOCKERHUB_CREDENTIALS_PSW
+                  echo $DOCKERHUB_CREDENTIALS_PSW > test.txt
                   bat 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
 			            myapp.push("${env.BUILD_ID}")
                   echo "Push Docker Image Completed"
