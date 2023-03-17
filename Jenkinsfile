@@ -20,9 +20,11 @@ pipeline {
     // }
 
     stage('Push image') {
+       steps {
         withDockerRegistry([ credentialsId: "dockerhub", url: "" ]) {
         bat "docker push malamcsc/kubernetes_project_test"
         }
+    }
     }
 
     // stage('Push') {
