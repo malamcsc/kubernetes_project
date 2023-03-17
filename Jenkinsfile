@@ -6,6 +6,7 @@ pipeline {
   environment {
     DOCKERHUB_CREDENTIALS = credentials('dockerhub')
   }
+
   stages {
     stage('Build') {
       steps {
@@ -22,16 +23,18 @@ pipeline {
         withDockerRegistry([ credentialsId: "dockerhub", url: "" ]) {
         bat "docker push malamcsc/kubernetes_project_test"
         }
+    }
 
     // stage('Push') {
     //   steps {
     //     bat 'docker push malamcsc/kubernetes_project_test'
     //   }
     // }
-  }
+  
   post {
     always {
       bat 'docker logout'
     }
   }
+}
 }
