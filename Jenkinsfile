@@ -24,10 +24,9 @@ pipeline {
          
         stage('Login and Dcoker push') {
           steps {
-                  
-                  withDockerRegistry([ credentialsId: "dockerhub", url: "" ])
-                  script{
-			            myapp.push("${env.BUILD_ID}")
+            script{
+                  withDockerRegistry([ credentialsId: "dockerhub", url: "" ]){
+                  myapp.push("${env.BUILD_ID}")}
                   }
 		          }
            }
