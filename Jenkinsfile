@@ -25,9 +25,10 @@ pipeline {
         stage('Login and Dcoker push') {
           steps {
                   
-                  withDockerRegistry([ credentialsId: "dockerhub", url: "" ]){
+                  withDockerRegistry([ credentialsId: "dockerhub", url: "" ])
+                  script{
 			            myapp.push("${env.BUILD_ID}")
-                  echo "Push Docker Image Completed"}
+                  }
 		          }
            }
         
