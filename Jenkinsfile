@@ -1,38 +1,49 @@
 pipeline {
+
   agent any
-  options {
-    buildDiscarder(logRotator(numToKeepStr: '5'))
-  }
   environment {
-    DOCKERHUB_CREDENTIALS = credentials('dockerhub')
-  }
+        DOCKERHUB_CREDENTIALS = credentials('dockerhub')
+    }
 
   stages {
-    stage('Build') {
+
+    stage('Checkout Source') {
       steps {
-        bat 'docker build -t malamcsc/kubernetes_project_test .'
+        git url:'https://github.com/malamcsc/kubernetes_project.git', branch:'master'
       }
     }
-    // stage('Login') {
-    //   steps {
-    //     bat 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
-    //   }
-    // }
-
-    stage('Push image') {
-       steps {
-        withDockerRegistry([ credentialsId: "dockerhub", url: "" ]) {
-        bat "docker push malamcsc/kubernetes_project_test"
+    
+      stage("Build image") {
+            steps {
+                script {
+                    myapp = docker.build("malamcsc/kubernetes_project:${env.BUILD_ID}")
+                }
+            }
         }
-     }
+    
+         
+        stage('Login and Dcoker push') {
+          steps {
+                  
+                  withDockerRegistry([ credentialsId: "dockerhub", url: "" ]){
+			            myapp.push("${env.BUILD_ID}")
+                  echo "Push Docker Image Completed"}
+		          }
+           }
+        
+
+      
+    stage('Deploy App') {
+      steps {
+        echo "Deployment started ..."
+        bat "sed -i 's/tagversion/${env.BUILD_ID}/g' deploy.yaml"
+        echo "Start deployment of deploy.yaml"
+        script {
+          kubernetesDeploy(configs: "deploy.yml", kubeconfigId: "mykubeconfig")
+        }
+      }
     }
 
-    // stage('Push') {
-    //   steps {
-    //     bat 'docker push malamcsc/kubernetes_project_test'
-    //   }
-    // }
-  
+  }
 
- }
 }
