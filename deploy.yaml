@@ -7,7 +7,7 @@ metadata:
 data:
   DB_USER: "flask_user"
   DB_PASS: "flask"
-  INSTANCE_HOST : "172.18.0.1"
+  INSTANCE_HOST : "172.31.224.1"
   DB_NAME : "flaskdb"
   DB_PORT : "5433"
 
@@ -31,7 +31,7 @@ spec:
     spec:
       containers:
       - name: "flask"
-        image: "malamcsc/kubernetes_project:tagversion"
+        image: "malamcsc/kubernetes_project:25"
         envFrom:
           - configMapRef:
               name : api-config
