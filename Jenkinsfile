@@ -21,7 +21,7 @@ pipeline {
       steps {
         
         // bat "sed -i 's/tagversion/${env.BUILD_ID}/g' deploy.yaml"
-        bat "(Get-Content deploy.yaml) -replace 'tagversion', ${env.BUILD_ID} | Out-File -encoding ASCII deploy.yaml"
+        // bat "(Get-Content deploy.yaml) -replace 'tagversion', ${env.BUILD_ID} | Out-File -encoding ASCII deploy.yaml"
         script {
           kubernetesDeploy(configs: "deploy.yml", kubeconfigId: "mykubeconfig")
         }
