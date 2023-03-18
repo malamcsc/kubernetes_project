@@ -37,11 +37,12 @@ pipeline {
       steps {
         script {
         // bat "sed -i 's/tagversion/${env.BUILD_ID}/g' deploy.yaml"
-          def text = readFile file: "deploy.yaml"{
+          def text = readFile file: "deploy.yaml" {
           text = text.replaceAll("%tagversion%", "${env.BUILD_ID}")}
           writeFile file: "file.txt", text: text
         
           kubernetesDeploy(configs: "deploy.yml", kubeconfigId: "mykubeconfig")
+        }
         
       }
     }
