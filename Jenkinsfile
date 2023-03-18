@@ -35,13 +35,12 @@ pipeline {
       
     stage('Deploy App') {
       steps {
-        script {
-        // bat "sed -i 's/tagversion/${env.BUILD_ID}/g' deploy.yaml"
-          def text = readFile file: "deploy.yaml"{
-          text = text.replaceAll("%tagversion%", "${env.BUILD_ID}")}
-          writeFile file: "file.txt", text: text
         
+        // bat "sed -i 's/tagversion/${env.BUILD_ID}/g' deploy.yaml"
+        bat "(Get-Content deploy.yaml) -replace 'tagversion', ${env.BUILD_ID} | Out-File -encoding ASCII deploy.yaml"
+        script {
           kubernetesDeploy(configs: "deploy.yml", kubeconfigId: "mykubeconfig")
+        }
         
       }
     }
