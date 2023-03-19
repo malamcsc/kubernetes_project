@@ -1,14 +1,47 @@
 pipeline {
-agent any
+
+  agent any
   environment {
-    PATH = "C:\\Program Files\\Git\\usr\\bin;C:\\Program Files\\Git\\bin;${env.PATH}"
-   }
-   stages {
-    stage('Build') {
+        DOCKERHUB_CREDENTIALS = credentials('dockerhub')
+    }
+
+  stages {
+
+    stage('Checkout Source') {
       steps {
-        sh 'docker build -t malamcsc/kubernetes_project_test_test123 .'
+        git url:'https://github.com/malamcsc/kubernetes_project.git', branch:'master'
+      }
+    }
+    
+      stage("Build image") {
+            steps {
+                script {
+                    myapp = docker.build("malamcsc/kubernetes_project:${env.BUILD_ID}")
+                }
+            }
+        }
+    
+         
+        stage('Login and Dcoker push') {
+          steps {
+            script{
+                  withDockerRegistry([ credentialsId: "dockerhub", url: "" ]){
+                  myapp.push("${env.BUILD_ID}")}
+                  }
+		          }
+           }
+      
+    stage('Deploy App') {
+      steps {
+        
+        sh "sed -i 's/tagversion/${env.BUILD_ID}/g' deploy.yaml"
+        script {
+          kubernetesDeploy(configs: "deploy.yml", kubeconfigId: "mykubeconfig")
+        }
+        
       }
     }
 
   }
-  } 
+
+}

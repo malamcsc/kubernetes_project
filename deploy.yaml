@@ -31,7 +31,7 @@ spec:
     spec:
       containers:
       - name: "flask"
-        image: "malamcsc/kubernetes_project:25"
+        image: "malamcsc/kubernetes_project:tagversion"
         envFrom:
           - configMapRef:
               name : api-config
