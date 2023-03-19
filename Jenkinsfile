@@ -7,12 +7,16 @@ pipeline {
 
   stages {
 
-    stage('Checkout Source') {
-      steps {
-        git url:'https://github.com/malamcsc/kubernetes_project.git', branch:'master'
+    // stage('Checkout Source') {
+    //   steps {
+    //     git url:'https://github.com/malamcsc/kubernetes_project.git', branch:'master'
+    //   }
+    // }
+
+      stage('Checkout') {
+        steps { git branch: 'master', credentialsId: 'github', url: 'https://github.com/malamcsc/kubernetes_project.git'
+        }
       }
-    }
-    
       stage("Build image") {
             steps {
                 script {
