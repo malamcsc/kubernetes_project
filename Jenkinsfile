@@ -51,7 +51,7 @@ pipeline {
       steps {
         
         sh "sed -i 's/tagversion/${env.BUILD_ID}/g' deploy.yaml"
-        sh "kubctl apply -f deploy.yml"
+        sh "kubectl apply -f deploy.yml"
         
       }
     }
