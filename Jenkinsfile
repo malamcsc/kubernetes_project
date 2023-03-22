@@ -40,14 +40,13 @@ pipeline {
       steps {
         sh "sed -i 's/tagversion/${env.BUILD_ID}/g' deploy.yaml"
         script {
-          kubernetesDeploy(configs: "deploy.yml", kubeconfigId: "kubernetes")
+          kubernetesDeploy(configs: "deploy.yaml", kubeconfigId: "kubernetes")
         }
         
       }
     }
 
     
-
   }
 
 }
