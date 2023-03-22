@@ -36,11 +36,20 @@ pipeline {
 		  //         }
       //      }
       
+    // stage('Deploy App') {
+    //   steps {
+    //     sh "sed -i 's/tagversion/${env.BUILD_ID}/g' deploy.yaml"
+    //     script {
+    //       kubernetesDeploy(configs: "deploy.yaml", kubeconfigId: "kubernetes")
+    //     }
+        
+    //   }
+    // }
+
     stage('Deploy App') {
       steps {
         sh "sed -i 's/tagversion/${env.BUILD_ID}/g' deploy.yaml"
-        script {
-          kubernetesDeploy(configs: "deploy.yaml", kubeconfigId: "kubernetes")
+        sh "kubectl apply -f deploy.yaml"
         }
         
       }
