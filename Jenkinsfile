@@ -37,8 +37,7 @@ pipeline {
       //      }
       
     stage('Deploy App') {
-      steps {ss
-        
+      steps {
         sh "sed -i 's/tagversion/${env.BUILD_ID}/g' deploy.yaml"
         script {
           kubernetesDeploy(configs: "deploy.yml", kubeconfigId: "kubernetes")
