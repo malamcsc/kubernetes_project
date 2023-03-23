@@ -1,0 +1,64 @@
+pipeline {
+   environment {
+    imagename = "zippyops01/javaapp-training"
+    registryCredential = 'dockerhub'
+    dockerImage = ''
+  }
+  agent any
+  tools {
+  git 'Default'
+  maven 'mavan-demo'
+  dockerTool 'docker'
+   }
+ stages {
+
+    stage('Checkout Source') {
+      steps {
+checkout([$class: 'GitSCM', branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[credentialsId: 'my-git', url: 'http://gitlab.zippyops.com/demo/javaapp-deployment.git']]])
+      }
+    }
+stage("Build") {
+           steps {
+       script {
+               sh """
+                    mvn clean install
+                   """
+                }
+            }
+        }
+
+    
+      stage("Docker Build image") {
+            steps {
+                script {
+                    dockerImage = docker.build imagename
+                }
+            }
+        }
+    
+      stage("Docker Push image") {
+            steps {
+                script {
+                    docker.withRegistry('', registryCredential ) {
+                            dockerImage.push("${env.BUILD_ID}")
+                    }
+                }
+            }
+        }
+    stage('Remove Unused docker image') {
+      steps{
+        sh "docker rmi $imagename:$BUILD_NUMBER"
+      }
+    }
+    
+    stage('Deploy App to kuberentes') {
+      steps {
+        script {
+          sh "sed -i s/latest/$BUILD_NUMBER/g $WORKSPACE/deploy.yml"
+          kubernetesDeploy configs: 'deploy.yml', kubeConfig: [path: 'kubernetes_build'], kubeconfigId: 'kubeconfig', secretName: '', ssh: [sshCredentialsId: '*', sshServer: ''], textCredentials: [certificateAuthorityData: '', clientCertificateData: '', clientKeyData: '', serverUrl: 'https://']
+        }
+      }
+    }
+  }
+
+}

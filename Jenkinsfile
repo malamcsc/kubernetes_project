@@ -36,23 +36,23 @@ pipeline {
 		  //         }
       //      }
       
-    stage('Deploy App') {
-      steps {
-        sh "sed -i 's/tagversion/${env.BUILD_ID}/g' deploy.yaml"
-        script {
-          kubernetesDeploy(configs: "deploy.yaml", kubeconfigId: "kubernetes")
-        }
-        
-      }
-    }
-
     // stage('Deploy App') {
     //   steps {
     //     sh "sed -i 's/tagversion/${env.BUILD_ID}/g' deploy.yaml"
-    //     sh "kubectl apply -f deploy.yaml"
+    //     script {
+    //       kubernetesDeploy(configs: "deploy.yaml", kubeconfigId: "kubernetes")
     //     }
         
     //   }
+    // }
+
+    stage('Deploy App') {
+      steps {
+        sh "sed -i 's/tagversion/${env.BUILD_ID}/g' deploy.yaml"
+        sh "docker run --name k8s-app-v1 -p 5000:5000 malamcsc/kubernetes_project:${env.BUILD_ID}"
+        }
+        
+      }
     
 
     
