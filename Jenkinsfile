@@ -3,7 +3,6 @@ pipeline {
   agent any
   environment {
         DOCKERHUB_CREDENTIALS = credentials('dockerhub')
-        BUILD_ID = 4
     }
 
   stages {
@@ -14,27 +13,27 @@ pipeline {
       }
     }
 
-      // stage('Checkout') {
-      //   steps { git branch: 'master', credentialsId: 'github', url: 'https://github.com/malamcsc/kubernetes_project.git'
-      //   }
-      // }
-      // stage("Build image") {
-      //       steps {
-      //           script {
-      //               myapp = docker.build("malamcsc/kubernetes_project:${env.BUILD_ID}")
-      //           }
-      //       }
-      //   }
+      stage('Checkout') {
+        steps { git branch: 'master', credentialsId: 'github', url: 'https://github.com/malamcsc/kubernetes_project.git'
+        }
+      }
+      stage("Build image") {
+            steps {
+                script {
+                    myapp = docker.build("malamcsc/kubernetes_project:${env.BUILD_ID}")
+                }
+            }
+        }
     
          
-      //   stage('Login and Dcoker push') {
-      //     steps {
-      //       script{
-      //             withDockerRegistry([ credentialsId: "dockerhub", url: "" ]){
-      //             myapp.push("${env.BUILD_ID}")}
-      //             }
-		  //         }
-      //      }
+        stage('Login and Dcoker push') {
+          steps {
+            script{
+                  withDockerRegistry([ credentialsId: "dockerhub", url: "" ]){
+                  myapp.push("${env.BUILD_ID}")}
+                  }
+		          }
+           }
       
     // stage('Deploy App') {
     //   steps {
