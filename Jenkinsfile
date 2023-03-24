@@ -37,9 +37,11 @@ pipeline {
       //      }
       
     stage('Deploy App') {
-      steps {
+      steps { 
+        withKubeConfig([credentialsId: 'mykubeconfig']){
         sh "sed -i 's/tagversion/${env.BUILD_ID}/g' deploy.yaml"
-        sh "kubectl apply -f deploy.yaml"
+        sh './kubectl get services'
+        
         
       }
     }
