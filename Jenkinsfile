@@ -41,7 +41,7 @@ pipeline {
         withKubeConfig([credentialsId: 'mykubeconfig']){
         sh "sed -i 's/tagversion/${env.BUILD_ID}/g' deploy.yaml"
         sh './kubectl get services'
-        
+        }
         
       }
     }
