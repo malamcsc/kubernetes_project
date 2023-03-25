@@ -7,7 +7,7 @@ metadata:
 data:
   DB_USER: "flask_user"
   DB_PASS: "flask"
-  INSTANCE_HOST : "172.24.144.1"
+  INSTANCE_HOST : "172.18.96.1"
   DB_NAME : "flaskdb"
   DB_PORT : "5433"
 
