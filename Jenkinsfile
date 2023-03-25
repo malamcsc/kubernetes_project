@@ -3,6 +3,7 @@ pipeline {
   agent any
   environment {
         DOCKERHUB_CREDENTIALS = credentials('dockerhub')
+        BUILD_ID = 34
     }
 
   stages {
