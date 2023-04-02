@@ -18,7 +18,7 @@ spec:
       serviceAccountName : ksa-cloud-sql
       containers:
       - name: "flask"
-        image: "gcr.io/kubernetes-project-378913/flask_imagev3:green"
+        image: "malamcsc/kubernetes_project:tagversion"
         env:
         - name: PORT
           value: "8080"
