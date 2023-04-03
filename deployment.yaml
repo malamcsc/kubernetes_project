@@ -36,7 +36,7 @@ spec:
             secretKeyRef:
               name: gke-cloud-sql-secrets
               key: database
-        - name: DB_HOST
+        - name: INSTANCE_HOST
           valueFrom:
             secretKeyRef:
               name: flask-db-secret
