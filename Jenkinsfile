@@ -7,7 +7,6 @@ pipeline {
                 LOCATION = 'asia-east1-a'
                 CREDENTIALS_ID = 'kubernetes'
 				DOCKERHUB_CREDENTIALS = credentials('dockerhub')
-				BUILD_ID = 8	
 			}
 	
     stages {
@@ -17,22 +16,22 @@ pipeline {
       		}
     	}
 	    
-	    // stage("Build image") {
-        //     steps {
-        //         script {
-        //             myapp = docker.build("malamcsc/kubernetes_project:${env.BUILD_ID}")
-        //         }
-        //     }
-        // }
+	    stage("Build image") {
+            steps {
+                script {
+                    myapp = docker.build("malamcsc/kubernetes_project:${env.BUILD_ID}")
+                }
+            }
+        }
 	    
-	    // stage('Login and Dcoker push') {
-        //   steps {
-        //     script{
-        //           withDockerRegistry([ credentialsId: "dockerhub", url: "" ]){
-        //           myapp.push("${env.BUILD_ID}")}
-        //           }
-		//         }
-        //    }
+	    stage('Login and Dcoker push') {
+          steps {
+            script{
+                  withDockerRegistry([ credentialsId: "dockerhub", url: "" ]){
+                  myapp.push("${env.BUILD_ID}")}
+                  }
+		        }
+           }
 	    
 	    stage('Deploy to K8s') {
 		    steps{
