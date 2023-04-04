@@ -26,8 +26,10 @@ pipeline {
 	    
 	    stage('Login and Dcoker push') {
           steps {
-				sh "docker push gcr.io/kubernetes-project-378913/k8s_flask_image:${env.BUILD_ID}"
-				echo "image push"
+            script{
+                  withCredentials([file(credentialsId: "gcloud-cred", variable: "GCLOUD_CRED")]){
+                  sh ''' docker push malamcsc/kubernetes_project:${env.BUILD_ID} --key-file="$GCLOUD_CRED"} '''
+                  }
 		        }
            }
 	    
