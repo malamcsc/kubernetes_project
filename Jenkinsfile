@@ -27,7 +27,7 @@ pipeline {
 	    stage('Login and Dcoker push') {
           steps {
             script{
-                  withDockerRegistry([ credentialsId: "gcp_container_registry", url: "" ]){
+                  withDockerRegistry([ credentialsId: "kubernetes-project", url: "" ]){
                   myapp.push("${env.BUILD_ID}")}
                   }
 		        }
