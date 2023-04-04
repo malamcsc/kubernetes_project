@@ -24,13 +24,13 @@ pipeline {
             }
         }
 	    
-	    stage('Dcoker push to container resgistry') {
+	    stage('Login and Dcoker push') {
           steps {
             script{
-                  
+                  withDockerRegistry([ credentialsId: "gcp_container_registryss", url: "" ]){
                   myapp.push("${env.BUILD_ID}")}
-                }
-		        
+                  }
+		        }
            }
 	    
 	    stage('Deploy to K8s') {
