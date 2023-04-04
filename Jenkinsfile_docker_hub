@@ -19,18 +19,18 @@ pipeline {
 	    stage("Build image") {
             steps {
                 script {
-                    myapp = docker.build("gcr.io/kubernetes-project-378913/k8s_flask_image:${env.BUILD_ID}")
+                    myapp = docker.build("malamcsc/kubernetes_project:${env.BUILD_ID}")
                 }
             }
         }
 	    
-	    stage('Dcoker push to container resgistry') {
+	    stage('Login and Dcoker push') {
           steps {
             script{
-                  
+                  withDockerRegistry([ credentialsId: "dockerhub", url: "" ]){
                   myapp.push("${env.BUILD_ID}")}
-                }
-		        
+                  }
+		        }
            }
 	    
 	    stage('Deploy to K8s') {

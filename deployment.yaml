@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: "flask"
-        image: "malamcsc/kubernetes_project:tagversion"
+        image: "gcr.io/kubernetes-project-378913/k8s_flask_image:tagversion"
         env:
         - name: DB_PORT
           value: "5432"
