@@ -28,7 +28,7 @@ pipeline {
 	    stage('Login and Dcoker push') {
           steps {
             script {
-				docker.withRegistry("$continer_docker_registry", CREDENTIALS_ID ) { 
+				withDockerRegistry([ credentialsId: "CREDENTIALS_ID", url: "" ]) { 
 				myapp.push("${env.BUILD_ID}") } }
 				  }
 		       }
