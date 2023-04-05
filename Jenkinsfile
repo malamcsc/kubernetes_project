@@ -7,7 +7,7 @@ pipeline {
                 LOCATION = 'asia-east1-a'
                 CREDENTIALS_ID = 'kubernetes'
 				DOCKERHUB_CREDENTIALS = credentials('dockerhub')
-				GCLOUD_CRED = credentials('gcloud-cred')
+				GCLOUD_CREDS=credentials('gcloud-creds')
 			}
 	
     stages {
@@ -27,7 +27,11 @@ pipeline {
 	    
 	    stage('Login and Dcoker push') {
           steps {
-                sh "sudo docker push gcr.io/kubernetes-project-378913/k8s_flask_image:${env.BUILD_ID}"
+                sh ''' 
+        		    gcloud auth activate-service-account --key-file="$GCLOUD_CREDS"
+        		    docker login -u _json_key --password-stdin https://gcr.io < "$GCLOUD_CREDS"
+                    sudo docker push gcr.io/kubernetes-project-378913/k8s_flask_image:"$BUILD_ID" 
+                  '''
                 
 				}
 		    }
