@@ -27,11 +27,12 @@ pipeline {
 	    
 	    stage('Login and Dcoker push') {
           steps {
-                  
-                sh  'docker push malamcsc/kubernetes_project:${env.BUILD_ID} --key-file="$GCLOUD_CRED" ' 
-                  
-		        }
-           }
+            script {
+				docker.withRegistry("$continer_docker_registry", CREDENTIALS_ID ) { 
+				myapp.push("${env.BUILD_ID}") } }
+				  }
+		       }
+           
 		
 	    
 	    stage('Deploy to K8s') {

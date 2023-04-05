@@ -31,7 +31,7 @@ pipeline {
           steps {
             script{
                   withDockerRegistry([ credentialsId: "dockerhub", url: "" ]){
-                  myapp.push("${env.BUILD_ID}")}
+                  myapp.push("${env.BUILD_ID}") }
                   }
 		          }
            }
