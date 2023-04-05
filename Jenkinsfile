@@ -27,11 +27,10 @@ pipeline {
 	    
 	    stage('Login and Dcoker push') {
           steps {
-            script {
-				withDockerRegistry([ credentialsId: "CREDENTIALS_ID", url: "" ]) { 
-				myapp.push("${env.BUILD_ID}") } }
-				  }
-		       }
+                sh "sudo docker push gcr.io/kubernetes-project-378913/k8s_flask_image:${env.BUILD_ID}"
+                
+				}
+		    }
            
 		
 	    
