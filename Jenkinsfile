@@ -7,6 +7,7 @@ pipeline {
                 LOCATION = 'asia-east1-a'
                 CREDENTIALS_ID = 'kubernetes'
 				DOCKERHUB_CREDENTIALS = credentials('dockerhub')
+				GCLOUD_CRED = credentials('gcloud-cred')
 			}
 	
     stages {
@@ -26,9 +27,9 @@ pipeline {
 	    
 	    stage('Login and Dcoker push') {
           steps {
-                  withCredentials([file(credentialsId: "gcloud-cred", variable: "GCLOUD_CRED")]){
-                  sh ''' docker push malamcsc/kubernetes_project:${env.BUILD_ID} --key-file="$GCLOUD_CRED"} '''
-                  }
+                  
+                sh  'docker push malamcsc/kubernetes_project:${env.BUILD_ID} --key-file="$GCLOUD_CRED" ' 
+                  
 		        }
            }
 		
