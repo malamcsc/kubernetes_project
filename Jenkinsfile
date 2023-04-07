@@ -1,50 +1,61 @@
 pipeline {
-    agent any
-	
-	environment {
-				PROJECT_ID = 'kubernetes-project-378913'
-                CLUSTER_NAME = 'jenkin-cluster'
-                LOCATION = 'asia-east1-a'
-                CREDENTIALS_ID = 'kubernetes'
-				DOCKERHUB_CREDENTIALS = credentials('dockerhub')
-				GCLOUD_CREDS=credentials('gcloud-creds')
-			}
-	
-    stages {
-		stage('Checkout Source') {
-      		steps {
-        		git url:'https://github.com/malamcsc/kubernetes_project.git', branch:'master', credentialsId: 'github'
-      		}
-    	}
-	    
-	    stage("Build image") {
+
+  agent any
+  environment {
+        DOCKERHUB_CREDENTIALS = credentials('dockerhub')
+    }
+
+  stages {
+
+    stage('Checkout Source') {
+      steps {
+        git url:'https://github.com/malamcsc/kubernetes_project.git', branch:'master', credentialsId: 'github'
+      }
+    }
+
+      stage('Checkout') {
+        steps { git branch: 'master', credentialsId: 'github', url: 'https://github.com/malamcsc/kubernetes_project.git'
+        }
+      }
+      stage("Build image") {
             steps {
                 script {
-                    myapp = docker.build("gcr.io/kubernetes-project-378913/k8s_flask_image:${env.BUILD_ID}")
+                    myapp = docker.build("malamcsc/kubernetes_project:${env.BUILD_ID}")
                 }
             }
         }
-	    
-	    stage('Login and Dcoker push') {
+    
+         
+        stage('Login and Dcoker push') {
           steps {
-                sh ''' 
-        		    gcloud auth activate-service-account --key-file="$GCLOUD_CREDS"
-        		    docker login -u _json_key --password-stdin https://gcr.io < "$GCLOUD_CREDS"
-                    sudo docker push gcr.io/kubernetes-project-378913/k8s_flask_image:"$BUILD_ID" 
-                  '''
-                
-				}
-		    }
-           
-		
-	    
-	    stage('Deploy to K8s') {
-		    steps{
-			    echo "Deployment started ..."
-				sh "sed -i 's/tagversion/${env.BUILD_ID}/g' deployment.yaml"
-			    step([$class: 'KubernetesEngineBuilder', projectId: env.PROJECT_ID, clusterName: env.CLUSTER_NAME, location: env.LOCATION, manifestPattern: 'deployment.yaml', credentialsId: env.CREDENTIALS_ID, verifyDeployments: true])
-			    echo "Deployment Finished ..."
-		    }
-	    }
+            script{
+                  withDockerRegistry([ credentialsId: "dockerhub", url: "" ]){
+                  myapp.push("${env.BUILD_ID}") }
+                  }
+		          }
+           }
+         
+    stage('Deploy App') {
+      steps { 
+        withKubeConfig([credentialsId: 'mykubeconfig']){
+        sh "sed -i 's/tagversion/${env.BUILD_ID}/g' deploy.yaml"
+        sh 'curl -LO "https://storage.googleapis.com/kubernetes-release/release/v1.20.5/bin/linux/amd64/kubectl"'
+        sh 'chmod u+x ./kubectl'
+        sh "./kubectl apply -f deploy.yaml"
+        }
+        
+      }
     }
+
+    // stage('Deploy App') {
+    //   steps {
+    //     sh "docker run --name k8s-app-v1 -d -p 5000:5000 malamcsc/kubernetes_project:${env.BUILD_ID}"
+    //     }
+        
+    //   }
+    
+
+    
+  }
+
 }
